@@ -1,9 +1,8 @@
 {
 	"name": "vizionar",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "",
 	"main": "parser.js",
-	"engines": { "node":">= 0.4.x < 0.7.0" },
 	"scripts": {
 		"test": "mocha -u tdd test/*"
 	},
