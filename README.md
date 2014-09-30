@@ -6,7 +6,7 @@ Git/SVN/Mercurial repository parser to grab metadata
 ## How to
 
 ```javascript
-var rpk = require('repo-parser');
+var rpk = require('vizionar');
 
 rpk({
   folder : '/home/tknew/keymetrics/pm2/'
