@@ -1,7 +1,7 @@
 {
-	"name": "repo-parser",
-	"version": "1.0.0",
-	"description": "Parses Git, Mercurial, and Subversion repositories.",
+	"name": "vizionar",
+	"version": "0.1.0",
+	"description": "",
 	"main": "parser.js",
 	"engines": { "node":">= 0.4.x < 0.7.0" },
 	"scripts": {
