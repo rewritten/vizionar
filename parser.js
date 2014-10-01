@@ -1,16 +1,15 @@
-var fs = require("fs");
-var sys = require("sys");
+var fs   = require("fs");
+var sys  = require("sys");
 var exec = require("child_process").exec;
 
 var halt = false;
 
 function error(repoType, task, errorMsg, cb) {
-	if(halt) {
-		return;
-	}
+	if (halt) return false;
+
 	console.log("[Repo-Parser] An error occured while " + task + " in a " + repoType + " repository: " + errorMsg);
-	cb(true);
 	halt = true;
+  return cb("[Repo-Parser] An error occured while " + task + " in a " + repoType + " repository: " + errorMsg);
 }
 
 function checkReturn(dataArray, cb) {
@@ -25,7 +24,7 @@ function checkReturn(dataArray, cb) {
     });
 		cb(null, dataArray);
 	}
-}
+};
 
 function parseHg(folder, cb) {
 	var data = {};
@@ -147,6 +146,7 @@ function parseSvn(folder, cb) {
 			checkReturn(data, cb);
 		}
 	});
+
 	exec("cd '"+folder+"'; svn log -r COMMITTED", function(err, stdout, stderr) {
 		if(err !== null) {
 			error("subversion", "fetching log", stderr, cb);
@@ -188,17 +188,17 @@ function repo_parser(args, cb) {
     folder = folder + "/";
   }
 
-	fs.exists(folder+".hg", function(exists) {
+  fs.exists(folder+".git", function(exists) {
 		if (exists) {
-			return parseHg(folder, cb);
+			return parseGit(folder, cb);
 		}
-    fs.exists(folder+".git", function(exists) {
+    fs.exists(folder+".svn", function(exists) {
 		  if (exists) {
-			  return parseGit(folder, cb);
+			  return parseSvn(folder, cb);
 		  }
-      fs.exists(folder+".svn", function(exists) {
+      fs.exists(folder+".hg", function(exists) {
 		    if (exists) {
-			    return parseSvn(folder, cb);
+			    return parseHg(folder, cb);
 		    }
         else {
           return cb({
