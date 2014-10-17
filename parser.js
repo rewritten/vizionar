@@ -88,27 +88,19 @@ function parseGit(folder, cb) {
 			checkReturn(data, cb);
 		}
 	});
-	exec("cd '"+folder+"'; git log -1 --stat", function(err, stdout, stderr) {
+	exec("cd '"+folder+"'; git show --quiet --format=%H%n%aD%n%s%n%B HEAD", function(err, stdout, stderr) {
 		if(err !== null) {
 			error("git", "fetching log", stderr, cb);
 		}
 		else {
-			var message = stdout.match(/^commit ([^\n]+)$/m);
-			//date = stdout.match(/^date:\s+:([^\n]+)$/m);
-			var summary = stdout.match(/Date:[^\n]+\n((.|\n)*)$/);
-			data.revision = message[1];
-			//data.comment = summary[1];
-			//data.update_time = date;
-			checkReturn(data, cb);
-		}
-	});
-  exec("cd '"+folder+"'; git log --oneline -n 1", function(err, stdout, stderr) {
-		if(err !== null) {
-			error("git", "fetching comment", stderr, cb);
-		}
-		else {
-			data.comment = stdout.substr(stdout.indexOf(" ") + 1);
-			//data.update_time = date;
+			var lines = stdout.split("\n");
+			var revision = lines.shift();
+			var date = lines.shift();
+			var subject = lines.shift();
+			data.comment = subject;
+			data.revision = revision;
+			// data.message = lines.join("\n"); // the full commit message - includes the subject.
+			data.update_time = date;
 			checkReturn(data, cb);
 		}
 	});
